@@ -1,0 +1,348 @@
+# For Ubuntu
+
+lsb_release -a
+uname -a
+
+ls -la
+ls -la ~ /
+ls -alt
+ls -lai
+
+ls -lai | sort -k 1 -r
+ls -lai | grep drwx
+
+clear
+
+touch test_find.txt
+find ~ -name '*.txt'
+find ~ -name test_find.txt -exec rm {} \; # space escape semicolon
+find /usr/bin -name gzip -ls
+find ~ -regex "^[/.a-z]*$"
+find ~ -mtime +1 -regex "^[/.a-z]*$"
+find ~ -mtime 1 -regex "^[/.a-z]*$"
+find ~ -mtime -1 -regex "^[/.a-z]*$"
+
+vim &
+ps aux
+fg # ESC, :q
+# Ctrl + z
+fg
+# Ctrl + z
+jobs -l # job is a shell task
+fg %1 # %1, %2, job number
+# Ctrl + z
+bg %1 # execute as background
+
+printenv
+echo $LANG
+mkdir vim_gym
+cd vim_gym
+ln -s /usr/bin/vim soft_link_vim
+soft_link_vim
+echo $PATH
+PATH=$PATH:$HOME/vim_gym
+PATH=$HOME/vim_gym:$PATH
+echo $PATH
+soft_link_vim
+
+alias list='ls -l'
+type list
+unalias list
+type list
+
+alti # command not found
+alias alti='date;ls -alti'
+type alti
+type --help
+alti
+alti > save_ls
+cat save_ls
+alti >> save_ls
+cat save_ls
+
+cd ~
+cd /
+cd - # the previous directory you were in
+cd ..
+pwd
+tty # to print file name of terminal on standard input
+hostname
+hostid
+arch
+uptime
+cd -
+
+less  .bashrc # use f key, b key to move between pages
+
+ls -la > testz1 # 839
+ls -lai > testz2 # 987
+ls -alti > testz3 # 1045
+gzip testz1 # testz1.gz 322
+bzip2 testz2 # testz2.bz2 415
+xz testz3 # testz3.xz 432
+less testz1.gz
+less testz2.bz2
+less testz3.xz
+gunzip testz1.gz
+bunzip2 testz2.bz2
+unxz testz3.xz
+tar cf testz.tar testz1 testz2
+tar tf testz.tar
+tar rf testz.tar testz3
+tar tf testz.tar
+gzip testz.tar
+gunzip testz.tar.gz
+tar xf testz.tar
+
+# 0 stdin 1 stdout 2 stderr
+ls nothing > redirect.txt # The stdout to the file, stderr to the screen
+ls < nothing > redirect.txt
+ls nothing > redirect.txt 2>&1 # Redirect stderr to stdout first
+ls nothing >& redirect.txt # The stdout and stderr to the file
+# Similarly,
+ls nothing | less # No stderr to less
+ls nothing |& less # stderr and stdout to less
+
+cat .bashrc | wc
+cat .bashrc | grep "if \["
+
+mkdir vim_gym
+diff . vim_gym
+echo this is meaningless dummy file > dummy.txt
+diff -u .bash_logout dummy.txt
+
+echo 안녕하세요 > hello.txt
+wc hello.txt # 1 1 16 hello.txt -l -w -c line word character(1byte)
+wc -m hello.txt # 6 hello.txt -m multi-byte (6 = multi-byte characters 5 + \n 1)
+# b'\xec\x95\x88\xeb\x85\x95\xed\x95\x98\xec\x84\xb8\xec\x9a\x94\n'
+# 3-byte characters + \n
+# \xec\x95\x88 '안' \xec\x9a\x94 '요' utf-8
+# \xec\x95\x89 '앉'
+
+tail -f /dev/kmsg # waiting the next last message
+
+file .bashrc
+head .bashrc
+
+watch -n 1 ps aux
+
+mkdir vim_gym
+cd vim_gym
+vim .crontab # crontab for cron, for an user
+* * * * * echo "every minute `date`" >> ./every_min 
+# min hour(24 Hour) day month day(of week, 0 is Sunday) command
+# every_min creates in home directory, why?
+# :q
+crontab ./.crontab
+crontab -l
+service cron status # * cron is not running, WSL2
+sudo service cron start
+service cron status # * cron is running
+crontab -r
+crontab -l
+crontab .crontab
+crontab -l
+cd ..
+cat every_min
+crontab -r
+crontab -l
+
+ps aux
+ps aux | grep bash # (^ start)($ end)(. one chr)(chr* chr >= 0)([ab] a or b)([a-z0-9] abc..., 0123...,)
+kill -9 PID # SIGKILL, only when you are sure to kill a process
+
+top # updates per every 3 seconds
+
+service --status-all
+service rsyslog status
+
+which rm
+whereis rm
+man rm
+man 1 rm
+man man
+whatis rm
+
+which info
+whatis info
+info rm
+info coreutils # q to quit, u to go upward
+
+factor 2 4 8 16
+factor 10 100 1000 10000
+factor 210131
+seq 10 # 1 2 3 4 5 6 7 8 9 10
+seq -2 10 # -2 -1 0 1 2 3 4 5 6 7 8 9 10
+seq 3 3 81 # 3, 6, 9, ... , 78, 81
+
+sleep 3s; echo -e '\a' # alarm
+
+yes Linux # Ctrl+c to stop
+
+mkdir diary{2020..2022}0{1..9} diary{2020..2022}{10..12}
+rmdir diary{2020..2022}0{1..9} diary{2020..2022}{10..12}
+
+touch "file name with space"
+rm "file name with space"
+mkdir "directory name with space"
+rmdir directory\ name\ with\ space/
+
+mkdir vim_gym
+cd vim_gym
+cp ~/.bashrc ~/vim_gym/
+mv ~/vim_gym/.bashrc ~/vim_gym/test_bashrc
+# You can make a soft link to the directory or the file in local or other computer system,
+# while a hard link cannot
+# A soft link, a.k.a. a symbolic link is like a shortcut icon in Windows
+# But becareful
+# If you change a soft link, the original file also change
+ln -s ~/vim_gym/test_bashrc test_link 
+# While if you delete the original, it doesn't affect the hard link of it
+ln -s ../.bashrc test_bashrc2 # If you delete the original file, soft link cannot access(error)
+ln test_bashrc test_hardlink # You can check the number of hard links by typing ls -l
+ls -alti
+rm test_hardlink
+cd ..
+rm --help
+rm -r vim_gym/
+
+mkdir vim_gym
+mv vim_gym/ del_vim_gym/
+
+id
+cat /etc/group
+
+mkdir vim_gym
+cd vim_gym
+touch test_chmod
+chmod 754 test_chmod # 7(rwx), 5(r-x), 4(r--), user, group, other
+ls -alti /usr/bin/ | grep -rws
+ls -alti /usr/bin/passwd # -rwsr-xr-x Others can execute without having to login as the user
+touch test_set_uid
+chmod u+s test_set_uid # if 'S', give the file u+x
+ls -la
+chmod u-s test_set_uid
+ls -alti /usr/bin/ | grep rwsr-s
+ls -alti /usr/bin/wall # -rwxr-sr-x
+touch test_set_gid_on_file
+chmod g+s test_set_gid_on_file
+ls -la
+chmod g-s test_set_gid_on_file
+cd ..
+chmod -R 755 vim_gym/ # -R for including subdirectories and files(recursive)
+cd vim_gym
+ls -la
+cd ..
+whoami
+id noname
+groups # noname, cdrom, floppy, ...
+chgrp floppy vim_gym/ # chown changes owner, chgrp changes group, using -R for recursive
+chmod g+s vim_gym/
+cd vim_gym
+touch test_set_gid_on_dir # noname:floppy
+ls -la
+cd..
+sudo chown -R noname:noname vim_gym
+ls -la
+cd vim_gym
+ls -la
+ls -alti / | grep rwt
+ls -ld /tmp # rwxrwxrwt Others cannot delete files made by the others
+chmod o+t .
+ls -ld . # rwxr-sr-t
+chmod 0755 . # 4 set uid(u+s) 2 set gid(g+s) 1 sticky bit(o+t)
+ls -ld # rwxr-sr-x
+chmod 7755 .
+ls -ld # rwsr-sr-t
+chmod 00755 . # ? clear all of set uid, set gid, even the sticky bit,
+ls -ld # rwxr-xr-x # ? little bit different from the explanation in info coreutils
+
+history
+
+printenv | wc
+set | wc
+declare | wc
+
+NUM=12345
+echo $NUM # 12345
+echo "one two three four five $NUM!" # one two three four five 12345!
+echo 'one two three four five $NUM!' # one two three four five $NUM!
+
+vim shell_script1.sh
+#!/bin/sh
+extension='py'
+name='Python'
+echo "$name has .$extension files"
+echo "I'm $0"
+echo "You gave me $# args, $*"
+echo "The first argument is $1"
+for i in $@;
+do :; done; echo "The last argument is $i"
+if [ $1 = 'hungry' ]
+then
+    echo "Stay hungry"
+elif [ $1 = 'Stay' ]
+then
+    echo "Stay Hungry"
+else
+    echo "Pizza"
+fi
+# ESC :wq
+ls -la
+chmod 755 shell_script1.sh
+ls -la
+./shell_script1.sh hungry 2 3 4 5 6
+
+vim shell_script2.sh
+#!/bin/sh
+#The sum of the numbers 1 ~ 10
+sum=0
+n=1
+while :
+do
+    sum=`expr $sum + $n`
+    n=`expr $n + 1`
+    if [ $n -eq 11 ]
+    then
+        break
+    fi
+done
+echo $sum
+ls -la
+chmod 755 shell_script1.sh
+ls -la
+./shell_script2.sh
+
+vim shell_script3.sh
+#!/bin/sh
+#The sum of the numbers 1 ~ 10
+sum=0
+n=1
+while [ $n -le 10 ]
+do
+    sum=`expr $sum + $n`
+    n=`expr $n + 1`
+done
+echo $sum
+
+help help
+help -d
+
+date
+cal
+
+df -BG
+free
+
+last noname
+uptime
+
+vimtutor
+# tabe filename tabn tabp
+# vsplit filename
+# Ctrl + ww
+
+passwd
+
+exit
+
